@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row py-5 fade-in">
+    <div class="col-lg-6 mx-auto text-center">
+        <div class="card border-0 shadow-2xl rounded-5 p-5">
+            <div class="mb-5">
+                <div class="display-1 text-primary mb-4">
+                    <i class="fas fa-check-circle pulse-animation"></i>
+                </div>
+                <h1 class="display-4 fw-bold mb-2" style="letter-spacing: -0.04em;">Acquisition Confirmed</h1>
+                <p class="text-muted fs-5">Protocol successful. Order #{{ order.id }} has been registered.</p>
+            </div>
+
+            <div class="p-4 rounded-5 bg-light mb-5 border-0 shadow-inner"
+                style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-truck-fast text-dark me-3 fa-2x"></i>
+                    <h4 class="mb-0 fw-bold">Algorithmic Delivery Estimate</h4>
+                </div>
+                <p class="display-6 text-dark mb-1 fw-bold">Arrival in <span class="text-primary">{{ days }}
+                        Cycles</span></p>
+                <p class="small text-muted mb-0 fw-semibold text-uppercase ls-wide">Calculated Expectation: {{
+                    order.estimated_delivery.strftime('%A, %d %b %Y') }}</p>
+            </div>
+
+            <div class="mb-5 text-start glass-bg p-4 rounded-4 border border-white">
+                <h5 class="fw-bold mb-4 text-uppercase small ls-wide text-secondary">Summary of Assets</h5>
+                <div class="d-flex justify-content-between mb-3 align-items-center">
+                    <span class="text-muted">Total Value Transferred</span>
+                    <span class="h4 fw-bold text-dark mb-0">₹{{ "%.2f"|format(order.total_amount) }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Status Code</span>
+                    <span class="badge bg-dark text-white px-3 py-2 rounded-pill fw-bold">{{ order.status|upper
+                        }}</span>
+                </div>
+            </div>
+
+            <div class="d-grid gap-3">
+                <a href="{{ url_for('main.all_products') }}"
+                    class="btn btn-primary btn-lg rounded-pill py-3 fw-bold shadow-xl">
+                    Back to Marketplace
+                </a>
+                <a href="{{ url_for('main.index') }}" class="btn btn-link text-decoration-none text-muted fw-bold">
+                    Terminal Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
+            opacity: 0.7;
+        }
+
+        50% {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(0.95);
+            opacity: 0.7;
+        }
+    }
+
+    .delivery-estimate-box {
+        background: linear-gradient(to right, #f8fafc, #eff6ff);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row mb-5 align-items-center">
+    <div class="col-md-6">
+        <h2 class="fw-bold"><i class="fas fa-tachometer-alt text-primary me-2"></i>Admin Dashboard</h2>
+        <p class="text-muted">Pricing analytics and business overview.</p>
+    </div>
+    <div class="col-md-6 text-md-end">
+        <div class="d-inline-block px-4 py-2 bg-white rounded-4 shadow-sm">
+            <span class="text-muted small d-block">Orders Today</span>
+            <span class="h4 fw-bold text-primary mb-0">{{ orders_today }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Main Product Table -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 overlay-hidden">
+            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">Product Pricing Status</h5>
+                <a href="{{ url_for('admin.add_product') }}" class="btn btn-primary btn-sm rounded-3">
+                    <i class="fas fa-plus me-1"></i> Add Product
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Product</th>
+                            <th>Base Price</th>
+                            <th>Current Price</th>
+                            <th>Change %</th>
+                            <th class="text-center">Trend</th>
+                            <th class="pe-4 text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in products %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ p.image_url }}" class="rounded-2 me-3"
+                                        style="width: 40px; height: 40px; object-fit: cover;">
+                                    <div>
+                                        <div class="fw-bold">{{ p.name }}</div>
+                                        <div class="text-muted small">{{ p.category }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>₹{{ "%.2f"|format(p.base_price) }}</td>
+                            <td><span class="fw-bold">₹{{ "%.2f"|format(p.current_price) }}</span></td>
+                            <td>
+                                <span
+                                    class="badge {% if p.change_pct > 0 %}bg-light text-danger{% elif p.change_pct < 0 %}bg-light text-success{% else %}bg-light text-muted{% endif %}">
+                                    {{ '+' if p.change_pct > 0 }}{{ p.change_pct }}%
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                {% if p.change_pct > 0 %}
+                                <i class="fas fa-caret-up text-danger fs-4"></i>
+                                {% elif p.change_pct < 0 %} <i class="fas fa-caret-down text-success fs-4"></i>
+                                    {% else %}
+                                    <i class="fas fa-minus text-muted small"></i>
+                                    {% endif %}
+                            </td>
+                            <td class="pe-4 text-end">
+                                <a href="{{ url_for('admin.edit_product', id=p.id) }}"
+                                    class="btn btn-sm btn-outline-primary rounded-3 me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ url_for('admin.delete_product', id=p.id) }}" method="POST"
+                                    class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-3"
+                                        onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Products Chart -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="fw-bold mb-0">Market Volatility</h5>
+                <p class="text-muted small mb-0">Top 5 most dynamic products</p>
+            </div>
+            <div class="card-body">
+                <canvas id="volatilityChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const vCtx = document.getElementById('volatilityChart').getContext('2d');
+    new Chart(vCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for dp in dynamic_products %}"{{ dp.name }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Price Volatility (₹)',
+            data: [{% for dp in dynamic_products %}{{ dp.volatility }}{% if not loop.last %}, {% endif %} {% endfor %}],
+    backgroundColor: 'rgba(37, 99, 235, 0.7)',
+        borderRadius: 8,
+            }]
+        },
+    options: {
+        indexAxis: 'y',
+            responsive: true,
+                plugins: { legend: { display: false } },
+        scales: {
+            x: { grid: { display: false } },
+            y: { grid: { display: false } }
+        }
+    }
+    });
+</script>
+{% endblock %}

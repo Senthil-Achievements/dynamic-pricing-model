@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row mb-5 fade-in">
+    <div class="col-12 text-center">
+        <h1 class="display-4 fw-bold mb-2">
+            {% if search_query %}
+            Results for "<span class="text-primary">{{ search_query }}</span>"
+            {% else %}
+            Market Collection
+            {% endif %}
+        </h1>
+        <p class="text-muted fs-5">
+            {% if search_query %}
+            Found {{ products|length }} assets matching your parameters.
+            {% else %}
+            Dynamic inventory managed by intelligent algorithms.
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="row g-4 fade-in" style="animation-delay: 0.1s;">
+    {% for product in products %}
+    <div class="col-md-3" data-product-id="{{ product.id }}">
+        <div class="card h-100 border-0 overflow-hidden">
+            <div class="position-relative">
+                <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}"
+                    style="height: 220px; object-fit: cover;">
+                <div class="position-absolute top-0 start-0 m-3">
+                    <span class="badge bg-white text-primary shadow-sm px-3 py-2 rounded-pill fw-bold"
+                        style="backdrop-filter: blur(4px); background: rgba(255,255,255,0.9) !important;">
+                        {{ product.category }}
+                    </span>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="update-timer mt-2 small fw-bold text-uppercase text-secondary">...</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                <a href="{{ url_for('main.product_detail', id=product.id) }}"
+                    class="btn btn-outline-dark rounded-pill w-100 fw-bold">
+                    View Details
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

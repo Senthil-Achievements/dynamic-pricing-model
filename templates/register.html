@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row py-5 fade-in">
+    <div class="col-md-5 mx-auto">
+        <div class="card border-0 shadow-2xl rounded-5 overflow-hidden">
+            <div class="card-header bg-dark text-white text-center py-5 border-0">
+                <h2 class="fw-bold mb-0" style="letter-spacing: -0.04em;">Join Collective</h2>
+                <p class="mb-0 opacity-75">Access algorithmic market insights</p>
+            </div>
+            <div class="card-body p-5">
+                <form method="POST">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-secondary">EMAIL ADDRESS</label>
+                        <input type="email" name="email"
+                            class="form-control form-control-lg rounded-4 bg-light border-0"
+                            placeholder="name@example.com" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-secondary">PASSWORD</label>
+                        <input type="password" name="password"
+                            class="form-control form-control-lg rounded-4 bg-light border-0" placeholder="••••••••"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-secondary">ACCESS CLEARANCE</label>
+                        <select name="role" class="form-select form-control-lg rounded-4 bg-light border-0 shadow-none">
+                            <option value="user">Standard Agent</option>
+                            <option value="admin">Operations Command</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-4 py-3 mb-4 shadow-xl">Finalize
+                        Enrollment</button>
+                    <div class="text-center">
+                        <span class="text-muted">Already registered?</span>
+                        <a href="{{ url_for('auth.login') }}"
+                            class="text-primary text-decoration-none fw-bold ms-1">Access Terminal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product | Admin Console</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/admin">
+                <i class="fas fa-arrow-left-long me-2 text-primary"></i>RETURN TO INVENTORY
+            </a>
+        </div>
+    </nav>
+
+    <div class="container my-5 animate-up">
+        <div class="row justify-content-center">
+            <div class="col-md-9 xl-8">
+                <div class="glass-panel p-5 border-0">
+                    <div class="text-center mb-5">
+                        <div class="bg-primary-soft p-3 rounded-circle d-inline-block text-primary mb-3">
+                            <i class="fas fa-edit h3 mb-0"></i>
+                        </div>
+                        <h2 class="fw-bold mb-1">Asset Revision</h2>
+                        <p class="text-secondary">Modifying system record for Product ID: <strong>#{{ product.product_id
+                                }}</strong></p>
+                    </div>
+
+                    <form action="/admin/edit/{{ product.product_id }}" method="POST" enctype="multipart/form-data">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-uppercase ls-1">Product Designation</label>
+                                <input type="text" class="form-control form-control-lg bg-light border-0"
+                                    name="product_name" value="{{ product.product_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-uppercase ls-1">System Barcode</label>
+                                <input type="text" class="form-control form-control-lg bg-light border-0" name="barcode"
+                                    value="{{ product.barcode }}" required>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-uppercase ls-1">Market Price (₹)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-0">₹</span>
+                                    <input type="number" step="0.01"
+                                        class="form-control form-control-lg bg-light border-0" name="mrp"
+                                        value="{{ product.mrp }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-uppercase ls-1">Discount Rate (%)</label>
+                                <div class="input-group">
+                                    <input type="number" step="0.01"
+                                        class="form-control form-control-lg bg-light border-0"
+                                        name="discount_percentage" value="{{ product.discount_percentage }}">
+                                    <span class="input-group-text bg-light border-0">%</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-uppercase ls-1">Retail Partner</label>
+                                <input type="text" class="form-control form-control-lg bg-light border-0"
+                                    name="store_name" value="{{ product.store_name }}" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-uppercase ls-1">Production Timestamp</label>
+                                <input type="date" class="form-control form-control-lg bg-light border-0"
+                                    name="manufacture_date" value="{{ product.manufacture_date }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-uppercase ls-1">Termination
+                                    Timestamp</label>
+                                <input type="date" class="form-control form-control-lg bg-light border-0"
+                                    name="expiry_date" value="{{ product.expiry_date }}" required>
+                            </div>
+
+                            <div class="col-12 mt-5">
+                                <div class="p-4 rounded-4 bg-light border border-dashed text-center">
+                                    <h6 class="fw-bold mb-3 text-uppercase small ls-1">Asset Visualization</h6>
+                                    <div class="mb-4">
+                                        <img src="{{ product.image_url }}" alt="Current Image"
+                                            class="rounded shadow-sm border p-2 bg-white"
+                                            style="width: 140px; height: 140px; object-fit: contain;">
+                                    </div>
+                                    <div class="row g-3 text-start">
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold">Update Local Binary</label>
+                                            <input type="file" class="form-control bg-white border-0" name="image_file">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-bold">Update Source URL</label>
+                                            <input type="url" class="form-control bg-white border-0"
+                                                name="image_url_online"
+                                                value="{{ product.image_url if 'http' in product.image_url else '' }}"
+                                                placeholder="https://source.com/image.jpg">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 d-grid mt-5">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-lg py-3">
+                                    <i class="fas fa-save me-2"></i> Commit Record Updates
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .ls-1 {
+            letter-spacing: 1px;
+        }
+
+        .bg-primary-soft {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .border-dashed {
+            border-style: dashed !important;
+            border-width: 2px !important;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

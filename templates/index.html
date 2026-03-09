@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row align-items-center py-5 mb-5 fade-in">
+    <div class="col-lg-6">
+        <h1 class="display-1 fw-bold mb-4" style="letter-spacing: -0.05em; line-height: 0.9;">
+            Revolutionize <br><span
+                style="background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Your
+                Pricing.</span>
+        </h1>
+        <p class="lead text-muted mb-5 fs-4" style="font-weight: 500;">
+            Experience the future of E-commerce with real-time ML-driven dynamic pricing updates.
+        </p>
+        <div class="d-flex gap-3">
+            <a href="{{ url_for('main.all_products') }}" class="btn btn-primary btn-lg px-5 py-3 shadow-lg">
+                Explore Marketplace <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-6 mt-lg-0 mt-5 position-relative">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-10 blur-3xl rounded-pill"
+            style="filter: blur(80px);"></div>
+        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800"
+            class="img-fluid rounded-5 shadow-2xl position-relative z-1" alt="E-commerce Hero"
+            style="transform: perspective(1000px) rotateY(-5deg);">
+    </div>
+</div>
+
+<div id="featured" class="mt-5 fade-in" style="animation-delay: 0.2s;">
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h2 class="display-5 fw-bold mb-1" style="letter-spacing: -0.03em;">Featured Insights</h2>
+            <p class="text-muted mb-0">Today's top picks with dynamic adjustments</p>
+        </div>
+        <a href="{{ url_for('main.all_products') }}" class="btn btn-link text-primary text-decoration-none fw-bold p-0">
+            View All Collection <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+    </div>
+    <div class="row g-4">
+        {% for product in products %}
+        <div class="col-md-3" data-product-id="{{ product.id }}">
+            <div class="card h-100 border-0 overflow-hidden">
+                <div class="position-relative">
+                    <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}"
+                        style="height: 240px; object-fit: cover;">
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge bg-white text-dark shadow-sm px-3 py-2 rounded-pill fw-bold"
+                            style="backdrop-filter: blur(4px); background: rgba(255,255,255,0.8) !important;">
+                            {{ product.category }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-1">{{ product.name }}</h5>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="h4 fw-bold text-dark current-price">₹{{ "%.2f"|format(product.current_price)
+                                }}</span>
+                            <span class="price-trend ms-1"></span>
+                        </div>
+                        <div class="update-timer">...</div>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                    <a href="{{ url_for('main.product_detail', id=product.id) }}"
+                        class="btn btn-outline-dark rounded-pill w-100 fw-bold">View Anatomy</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="mt-5 pt-5 fade-in" style="animation-delay: 0.4s;">
+    <div class="text-center mb-5">
+        <h2 class="display-6 fw-bold mb-2" style="letter-spacing: -0.03em;">Recommended for You</h2>
+        <p class="text-muted">Algorithmic selections based on market velocity</p>
+    </div>
+    <div class="row g-4">
+        {% if recommendations %}
+        {% for product in recommendations %}
+        <div class="col-md-3">
+            <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.name }}"
+                    style="height: 180px; object-fit: cover; opacity: 0.9;">
+                <div class="card-body p-3 text-center">
+                    <h6 class="fw-bold mb-1 text-truncate">{{ product.name }}</h6>
+                    <span class="text-primary fw-bold">₹{{ "%.2f"|format(product.current_price) }}</span>
+                </div>
+                <div class="card-footer bg-transparent border-0 p-3 pt-0">
+                    <a href="{{ url_for('main.product_detail', id=product.id) }}"
+                        class="btn btn-sm btn-outline-primary w-100 rounded-pill">View Asset</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col-12 text-center text-muted py-5">
+            <p>Generating personalized recommendations...</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .shadow-2xl {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+</style>
+{% endblock %}

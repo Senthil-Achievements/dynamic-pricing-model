@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Comparison | Smart Price</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-bolt-lightning me-2"></i>SMART PRICE
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/products">Our Products</a></li>
+                    <li class="nav-item ms-lg-4">
+                        <a class="btn btn-sm btn-primary rounded-pill px-3" href="/admin">Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5 animate-up">
+        <div class="text-center mb-5">
+            <span class="badge bg-success-soft text-success px-3 py-2 rounded-pill mb-3 fw-bold">
+                <i class="fas fa-check-double me-1"></i> Stores Synchronized
+            </span>
+            <h1 class="display-5 fw-bold mb-2">Market Intelligence</h1>
+            <p class="text-secondary lead">Comparing <strong>{{ products|length }}</strong> retailers for "{{
+                products[0].product_name }}"</p>
+        </div>
+
+        <div class="glass-panel overflow-hidden border-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th class="ps-4 py-3 border-0">Manufacturer Image</th>
+                            <th class="py-3 border-0">Retailer</th>
+                            <th class="py-3 border-0">Market Price</th>
+                            <th class="py-3 border-0">Discount</th>
+                            <th class="py-3 border-0">Expiry Health</th>
+                            <th class="py-3 border-0">Smart Price</th>
+                            <th class="pe-4 py-3 border-0 text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in products %}
+                        <tr class="store-row {% if loop.first %}best-deal-row{% endif %}">
+                            <td class="ps-4 py-4">
+                                <div class="bg-white p-2 rounded-3 shadow-sm d-inline-block">
+                                    <img src="{{ p.image_url }}" alt="Product" class="rounded"
+                                        style="width: 60px; height: 60px; object-fit: cover;">
+                                </div>
+                            </td>
+                            <td class="py-4">
+                                <div class="fw-bold h6 mb-0">{{ p.store_name }}</div>
+                                {% if loop.first %}
+                                <span class="badge bg-success small py-1 px-2 mt-1 shadow-sm">
+                                    <i class="fas fa-crown me-1 small"></i>OPTIMUM CHOICE
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 text-muted">₹{{ p.mrp }}</td>
+                            <td class="py-4">
+                                <span class="text-success fw-bold">{{ p.discount_percentage }}%</span>
+                            </td>
+                            <td class="py-4">
+                                <span
+                                    class="badge {{ 'bg-success' if p.expiry_days > 30 else 'bg-warning' if p.expiry_days > 7 else 'bg-danger' }} rounded-pill">
+                                    {{ p.expiry_info.status }}
+                                </span>
+                                <div class="small text-muted mt-1">{{ p.expiry_days }} days left</div>
+                            </td>
+                            <td class="py-4">
+                                <div class="h5 mb-0 fw-bold text-primary">₹{{ p.smart_price }}</div>
+                            </td>
+                            <td class="pe-4 py-4 text-end">
+                                <a href="/product/{{ barcode }}"
+                                    class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    Select <i class="fas fa-arrow-right ms-1 small"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-5 p-4 rounded-4 shadow-sm border-start border-primary border-4 animate-up"
+            style="background: white; animation-delay: 0.4s;">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="bg-primary-soft p-3 rounded-circle text-primary">
+                        <i class="fas fa-lightbulb h4 mb-0"></i>
+                    </div>
+                </div>
+                <div class="col">
+                    <h5 class="fw-bold mb-1">Expert Market Analysis</h5>
+                    <p class="mb-0 text-secondary">The algorithm suggests <strong>{{ products[0].store_name }}</strong>
+                        as the winner. We've prioritized shelf-life stability and verified inventory over raw discounts
+                        to ensure you get the highest quality product for your money.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2026 Smart Price Web Application. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <style>
+        .bg-success-soft {
+            background-color: rgba(16, 185, 129, 0.1);
+        }
+
+        .bg-primary-soft {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .best-deal-row {
+            background-color: rgba(16, 185, 129, 0.05) !important;
+            box-shadow: inset 4px 0 0 var(--success);
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
